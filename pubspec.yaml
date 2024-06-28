@@ -80,6 +80,7 @@ flutter:
     - assets/tehkopi.png
     - assets/starbak.png
     - assets/dialog_flow_auth.json
+    - assets/Logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/settingnotifprov.dart';
+import 'package:Trailblazer_Flutter/pages/chatbot/chatbot.dart';
 import 'package:Trailblazer_Flutter/pages/profile/ProfilePage.dart';
 import 'package:Trailblazer_Flutter/util/paymentprov.dart';
 import 'package:Trailblazer_Flutter/util/languageprov.dart';
@@ -136,7 +137,8 @@ class _SettingPageState extends State<SettingPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add code here to contact customer service
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => Chatbot()));
         },
         backgroundColor: Colors.orange,
         shape: const CircleBorder(),

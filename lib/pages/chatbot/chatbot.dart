@@ -33,7 +33,21 @@ class _ChatbotState extends State<Chatbot> {
       body: Container(
         child: Column(
           children: [
-            Expanded(child: message_screen(messages: messages)),
+            Expanded(
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/Logo.png'),
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
+                  message_screen(messages: messages),
+                ],
+              ),
+            ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
               color: Colors.black87,
@@ -44,6 +58,8 @@ class _ChatbotState extends State<Chatbot> {
                       style: TextStyle(color: Colors.white),
                       controller: controller,
                       decoration: InputDecoration(
+                        label: Text("ketikan pesan"),
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
                                   color: Colors.white, strokeAlign: 1))),
