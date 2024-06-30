@@ -3,9 +3,7 @@ import 'package:Trailblazer_Flutter/pages/onboarding/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
-import 'package:Trailblazer_Flutter/util/paymentprov.dart';
-import 'package:Trailblazer_Flutter/util/languageprov.dart';
-import 'package:Trailblazer_Flutter/util/settingnotifprov.dart';
+import 'package:Trailblazer_Flutter/util/ProfileProvider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +20,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CoffeeProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
-        ChangeNotifierProvider(create: (_) => PaymentProvider()),
+        ChangeNotifierProvider(create: (context) => PaymentProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
