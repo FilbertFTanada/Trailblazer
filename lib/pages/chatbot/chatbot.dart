@@ -33,29 +33,55 @@ class _ChatbotState extends State<Chatbot> {
       body: Container(
         child: Column(
           children: [
-            Expanded(child: message_screen(messages: messages)),
+            Expanded(
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/Logo.png'),
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
+                  message_screen(messages: messages),
+                ],
+              ),
+            ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
               color: Colors.black87,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: TextField(
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Sora'),
                       controller: controller,
                       decoration: InputDecoration(
+                          label: Text("Ketikan Pesan Anda"),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
                           focusedBorder: UnderlineInputBorder(
+                              // borderRadius: BorderRadius.circular(20),
                               borderSide: BorderSide(
                                   color: Colors.white, strokeAlign: 1))),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      sendMessage(controller.text);
-                      controller.clear();
-                    },
-                    icon: Icon(Icons.send),
-                    color: Colors.white,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: IconButton(
+                      onPressed: () {
+                        sendMessage(controller.text);
+                        controller.clear();
+                      },
+                      icon: Icon(Icons.send),
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
@@ -79,12 +105,30 @@ class _ChatbotState extends State<Chatbot> {
       DetectIntentResponse response = await dialogFlowtter.detectIntent(
           queryInput: QueryInput(text: TextInput(text: text)));
 
-      if (response.message == null) {
+      if (response.queryResult == null ||
+          response.queryResult!.fulfillmentMessages == null) {
         return;
       } else {
-        setState(() {
-          addMessage(response.message!);
-        });
+        var fulfillmentMessages = response.queryResult!.fulfillmentMessages;
+
+        for (var msg in fulfillmentMessages!) {
+          if (msg.text != null && msg.text!.text != null) {
+            setState(() {
+              addMessage(Message(text: DialogText(text: msg.text!.text)));
+            });
+          } else if (msg.payload != null &&
+              msg.payload!["richContent"] != null) {
+            for (var content in msg.payload!["richContent"]) {
+              for (var item in content) {
+                if (item["type"] == "image" && item["rawUrl"] != null) {
+                  setState(() {
+                    addMessage(Message(payload: {"imageUrl": item["rawUrl"]}));
+                  });
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
