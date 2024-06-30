@@ -30,8 +30,8 @@ class _message_screenState extends State<message_screen> {
                   padding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                   decoration: BoxDecoration(
                       color: isUserMessage
-                          ? Colors.blueGrey.withOpacity(0.8)
-                          : Colors.green.withOpacity(0.8),
+                          ? Colors.green.withOpacity(0.8)
+                          : Colors.blueGrey.withOpacity(0.8),
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(20),
