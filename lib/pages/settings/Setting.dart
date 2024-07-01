@@ -32,8 +32,7 @@ class _SettingPageState extends State<SettingPage> {
               InkWell(
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ProfilePage())
-                  );
+                      MaterialPageRoute(builder: (context) => ProfilePage()));
                 },
                 child: Row(
                   children: [
@@ -45,100 +44,100 @@ class _SettingPageState extends State<SettingPage> {
                         border: Border.all(color: Colors.grey, width: 1),
                       ),
                       child: ClipOval(
-<<<<<<< HEAD
-                        child: Image.network('https://wallpapercave.com/wp/wp7256426.jpg', fit: BoxFit.cover,),
-=======
                         child: Image.network(
                           "https://img.freepik.com/free-photo/side-view-unknown-man-posing_23-2149417555.jpg?size=626&ext=jpg&ga=GA1.1.1152997229.1709223401&semt=ais",
-                          fit: BoxFit.cover,),
->>>>>>> 610be94c67f46b2d0363d39ad201c229b1aacf0a
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 10,),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('John Doe', style: TextStyle(fontSize: 18),),
+                        const Text(
+                          'John Doe',
+                          style: TextStyle(fontSize: 18),
+                        ),
                         Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             shape: BoxShape.rectangle,
                             border: Border.all(color: Colors.grey, width: 1),
                           ),
-                          child: const Text('Silver', style: TextStyle(fontSize: 12, color: Colors.grey),),
+                          child: const Text(
+                            'Silver',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20,),
-              const Text('Notifications',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16
-                ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Notifications',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               ..._buildSwitchListTiles(notif),
-              const SizedBox(height: 20,),
-              const Text('Language',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16
-                ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Language',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               ..._buildDropdownButtonsLang(),
-              const SizedBox(height: 20,),
-              const Text('Payment Method',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16
-                ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Payment Method',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               ListTile(
-                title: const Text('Payment Method'),
-                trailing: Text(paymentProvider.Selected),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PaymentMethodPage(
-                        paymentMethodProvider: paymentProvider, 
+                  title: const Text('Payment Method'),
+                  trailing: Text(paymentProvider.Selected),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PaymentMethodPage(
+                          paymentMethodProvider: paymentProvider,
+                        ),
                       ),
-                    ),
-                  ).then((_) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Payment method changed successfully'),
-                          duration: Duration(seconds: 3),
+                    ).then((_) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content:
+                                Text('Payment method changed successfully'),
+                            duration: Duration(seconds: 3),
                           ),
                         );
                       }
-                  }
-                  );
-                }
+                    });
+                  }),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const login()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
                 ),
-            const SizedBox(height: 20,),
-            ElevatedButton(
-            onPressed: () {
-<<<<<<< HEAD
-              //Navigator.of(context).push(
-                  //MaterialPageRoute(builder: (context) => const LoginPage()));
-=======
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const login()));
->>>>>>> 610be94c67f46b2d0363d39ad201c229b1aacf0a
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              
-            ),
-            child: Text("Logout",
-            style: TextStyle(
-              color: Colors.black,
-            )),
-            )
+                child: Text("Logout",
+                    style: TextStyle(
+                      color: Colors.black,
+                    )),
+              )
             ],
           ),
         ),
@@ -158,7 +157,7 @@ class _SettingPageState extends State<SettingPage> {
     return [
       SwitchListTile(
         value: notif.Selected == 0,
-        onChanged: (val){
+        onChanged: (val) {
           setState(() {
             if (val) {
               notif.choice(0);
@@ -173,7 +172,7 @@ class _SettingPageState extends State<SettingPage> {
       ),
       SwitchListTile(
         value: notif.Selected == 1,
-        onChanged: (val){
+        onChanged: (val) {
           setState(() {
             if (val) {
               notif.choice(1);
@@ -183,12 +182,13 @@ class _SettingPageState extends State<SettingPage> {
           });
         },
         title: const Text("Order updates"),
-        subtitle: const Text("Get notified when an order is prepared or ready for pickup"),
+        subtitle: const Text(
+            "Get notified when an order is prepared or ready for pickup"),
         activeColor: Colors.orange,
       ),
       SwitchListTile(
         value: notif.Selected == 2,
-        onChanged: (val){
+        onChanged: (val) {
           setState(() {
             if (val) {
               notif.choice(2);
@@ -198,7 +198,8 @@ class _SettingPageState extends State<SettingPage> {
           });
         },
         title: const Text("Promotions"),
-        subtitle: const Text("Receive notifications about promotions and discounts"),
+        subtitle:
+            const Text("Receive notifications about promotions and discounts"),
         activeColor: Colors.orange,
       ),
     ];
