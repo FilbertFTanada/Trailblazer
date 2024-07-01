@@ -1,4 +1,4 @@
-import 'package:Trailblazer_Flutter/pages/profile/Profile.dart';
+import 'package:Trailblazer_Flutter/pages/settings/Setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Trailblazer_Flutter/util/coffe_type.dart';

@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:Trailblazer_Flutter/pages/onboarding/onboarding.dart';
+import 'package:Trailblazer_Flutter/util/languageprov.dart';
+import 'package:Trailblazer_Flutter/util/paymentprov.dart';
+import 'package:Trailblazer_Flutter/util/settingnotifprov.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
-import 'package:Trailblazer_Flutter/util/ProfileProvider.dart';
+// import 'package:Trailblazer_Flutter/util/ProfileProvider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +21,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => CoffeeProvider()),
+        ChangeNotifierProvider(create: (context) => CoffeeNewProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (context) => PaymentProvider()),
