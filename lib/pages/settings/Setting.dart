@@ -1,3 +1,4 @@
+import 'package:Trailblazer_Flutter/pages/register/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/settingnotifprov.dart';
@@ -44,7 +45,13 @@ class _SettingPageState extends State<SettingPage> {
                         border: Border.all(color: Colors.grey, width: 1),
                       ),
                       child: ClipOval(
+<<<<<<< HEAD
                         child: Image.network('https://wallpapercave.com/wp/wp7256426.jpg', fit: BoxFit.cover,),
+=======
+                        child: Image.network(
+                          "https://img.freepik.com/free-photo/side-view-unknown-man-posing_23-2149417555.jpg?size=626&ext=jpg&ga=GA1.1.1152997229.1709223401&semt=ais",
+                          fit: BoxFit.cover,),
+>>>>>>> 610be94c67f46b2d0363d39ad201c229b1aacf0a
                       ),
                     ),
                     const SizedBox(width: 10,),
@@ -115,8 +122,13 @@ class _SettingPageState extends State<SettingPage> {
             const SizedBox(height: 20,),
             ElevatedButton(
             onPressed: () {
+<<<<<<< HEAD
               //Navigator.of(context).push(
                   //MaterialPageRoute(builder: (context) => const LoginPage()));
+=======
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const login()));
+>>>>>>> 610be94c67f46b2d0363d39ad201c229b1aacf0a
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange,
