@@ -5,10 +5,12 @@ import 'package:flutter/widgets.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class coffeeTile extends StatelessWidget {
-  final Coffee coffee;
+  final coffeeType coffee_param;
+  late int indexCoffee;
 
-  coffeeTile({required this.coffee});
+  coffeeTile({required this.coffee_param, required this.indexCoffee});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,10 @@ class coffeeTile extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => detailItem(coffee: coffee)));
+                  builder: (context) => detailItem(
+                        coffee: coffee_param,
+                        index: indexCoffee,
+                      )));
             },
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
@@ -36,7 +41,8 @@ class coffeeTile extends StatelessWidget {
                 decoration: BoxDecoration(
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(coffee.coffeeIMGPath),
+                      image:
+                          NetworkImage(coffee_param.detail[indexCoffee].image),
                     ),
                     borderRadius: BorderRadius.circular(12)),
               ),
@@ -50,7 +56,7 @@ class coffeeTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  coffee.coffeeName,
+                  coffee_param.name,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -58,7 +64,7 @@ class coffeeTile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  coffee.coffeeDes,
+                  coffee_param.detail[indexCoffee].nameDetail,
                   style: TextStyle(
                     fontSize: 12,
                     color: Color.fromARGB(255, 174, 174, 174),
@@ -68,9 +74,8 @@ class coffeeTile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    //price
                     Text(
-                      coffee.coffeePrice,
+                      coffee_param.detail[indexCoffee].price,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.black,
@@ -78,20 +83,13 @@ class coffeeTile extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    //call to action button
                     GestureDetector(
                       onTap: () {
-                        // Menambahkan item ke keranjang
-                        CoffeeProvider coffeeProvider =
-                            Provider.of<CoffeeProvider>(context, listen: false);
-                        coffeeProvider.addItemToSelected(coffee);
-
-                        // // Navigasi ke halaman checkout
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (context) => CheckoutScreen(),
-                        //   ),
-                        // );
+                        CoffeeNewProvider coffeeProvider =
+                            Provider.of<CoffeeNewProvider>(context,
+                                listen: false);
+                        coffeeProvider.addItemToSelected(
+                            coffee_param, indexCoffee);
                       },
                       child: Container(
                         height: 30,

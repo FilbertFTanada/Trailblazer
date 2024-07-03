@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -7,19 +9,16 @@ import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
 import 'package:readmore/readmore.dart';
 
-class detailItem extends StatefulWidget {
-  const detailItem({Key? key, required this.coffee}) : super(key: key);
-  final Coffee coffee;
+class detailItem extends StatelessWidget {
+  final coffeeType coffee;
+  final int index;
 
-  @override
-  _detailItemState createState() => _detailItemState();
-}
-
-class _detailItemState extends State<detailItem> {
-  String selectedSize = 'M'; // Default size selection
+  const detailItem({Key? key, required this.coffee, required this.index})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String selectedSize = 'M'; // Default size selection
     bool isSoldOut = selectedSize == 'S' || selectedSize == 'L';
 
     return Scaffold(
@@ -41,8 +40,8 @@ class _detailItemState extends State<detailItem> {
                 width: MediaQuery.of(context).size.width,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(
-                    widget.coffee.coffeeIMGPath,
+                  child: Image.network(
+                    coffee.detail[index].image,
                     fit: BoxFit.fill,
                     color: isSoldOut ? Colors.grey.withOpacity(0.8) : null,
                     colorBlendMode: BlendMode.hue,
@@ -52,7 +51,7 @@ class _detailItemState extends State<detailItem> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Text(
-                  widget.coffee.coffeeName,
+                  coffee.name,
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
@@ -62,7 +61,7 @@ class _detailItemState extends State<detailItem> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Text(
-                  widget.coffee.coffeeDes,
+                  coffee.detail[index].nameDetail,
                   style: TextStyle(
                       fontSize: 13, color: Colors.blueGrey, fontFamily: 'Sora'),
                 ),
@@ -75,7 +74,7 @@ class _detailItemState extends State<detailItem> {
                       fontFamily: "Sora")),
               SizedBox(height: 10),
               ReadMoreText(
-                widget.coffee.coffeeDesc,
+                coffee.detail[index].desc,
                 trimLines: 3,
                 textAlign: TextAlign.justify,
                 trimMode: TrimMode.Line,
@@ -109,9 +108,7 @@ class _detailItemState extends State<detailItem> {
                     selected: isSelected,
                     onSelected: (isSelected) {
                       if (isSelected) {
-                        setState(() {
-                          selectedSize = size;
-                        });
+                        selectedSize = size;
                       }
                     },
                     backgroundColor: isSelected
@@ -165,7 +162,7 @@ class _detailItemState extends State<detailItem> {
                               fontFamily: "Sora"),
                         )
                       : Text(
-                          "\$${_calculatePrice().toStringAsFixed(2)}",
+                          "\$${_calculatePrice(selectedSize, coffee).toStringAsFixed(2)}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
@@ -179,9 +176,10 @@ class _detailItemState extends State<detailItem> {
                 onPressed: isSoldOut
                     ? null
                     : () {
-                        CoffeeProvider coffeeProvider =
-                            Provider.of<CoffeeProvider>(context, listen: false);
-                        coffeeProvider.addItemToSelected(widget.coffee);
+                        CoffeeNewProvider coffeeProvider =
+                            Provider.of<CoffeeNewProvider>(context,
+                                listen: false);
+                        coffeeProvider.addItemToSelected(coffee, index);
                       },
                 child: Text(
                   "Buy Now",
@@ -204,9 +202,11 @@ class _detailItemState extends State<detailItem> {
     );
   }
 
-  double _calculatePrice() {
-    double basePrice = double.parse(widget.coffee.coffeePrice
-        .substring(2)); // Remove '$ ' prefix and parse to double
+  double _calculatePrice(String selectedSize, coffeeType coffee) {
+    // double basePrice = double.parse(coffee.detail[index].price.substring(2)); // Remove '$ ' prefix and parse to double
+    double basePrice = double.parse(coffee.detail[index].price
+        .replaceAll(' ', '')
+        .substring(1)); // Remove '$' prefix and parse to double
 
     switch (selectedSize) {
       case 'S':
