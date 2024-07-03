@@ -1,24 +1,31 @@
 import 'package:Trailblazer_Flutter/pages/home/main_home.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class signup extends StatefulWidget {
-  const signup({Key? key}) : super(key: key);
+class Signup extends StatefulWidget {
+  const Signup({Key? key}) : super(key: key);
 
   @override
-  State<signup> createState() => _signupState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _signupState extends State<signup> {
-  final String password = 'password123';
-  final String username = 'fauzan';
+class _SignupState extends State<Signup> {
+  final String defaultPassword = 'password123';
+  final String defaultUsername = 'fauzan';
 
-  TextEditingController Username = TextEditingController();
-  TextEditingController Password = TextEditingController();
-  TextEditingController confirmPassword = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
 
   bool isEmptyUsername = false;
   bool isEmptyPassword = false;
   bool isMatched = true;
+
+  Future<void> saveAccount(String username, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+    await prefs.setString('password', password);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +74,7 @@ class _signupState extends State<signup> {
                   ),
                 ),
                 child: TextField(
-                  controller: Username,
+                  controller: usernameController,
                   onChanged: (value) {
                     setState(() {
                       isEmptyUsername = value.isEmpty;
@@ -95,8 +102,8 @@ class _signupState extends State<signup> {
                       padding: const EdgeInsets.only(left: 10, top: 5),
                       child: Text(
                         "Please Fill Username",
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 255, 127, 80)),
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 255, 127, 80)),
                       ),
                     )
                   : SizedBox(),
@@ -115,7 +122,7 @@ class _signupState extends State<signup> {
                   ),
                 ),
                 child: TextField(
-                  controller: Password,
+                  controller: passwordController,
                   onChanged: (value) {
                     setState(() {
                       isEmptyPassword = value.isEmpty;
@@ -144,8 +151,8 @@ class _signupState extends State<signup> {
                       padding: const EdgeInsets.only(left: 10, top: 5),
                       child: Text(
                         "Please Fill Password",
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 255, 127, 80)),
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 255, 127, 80)),
                       ),
                     )
                   : SizedBox(),
@@ -164,10 +171,10 @@ class _signupState extends State<signup> {
                   ),
                 ),
                 child: TextField(
-                  controller: confirmPassword,
+                  controller: confirmPasswordController,
                   onChanged: (value) {
                     setState(() {
-                      value == Password.text
+                      value == passwordController.text
                           ? isMatched = true
                           : isMatched = false;
                     });
@@ -196,13 +203,11 @@ class _signupState extends State<signup> {
                       padding: EdgeInsets.only(left: 10, top: 5),
                       child: Text(
                         "Password Do Not Match",
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 255, 127, 80)),
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 255, 127, 80)),
                       ),
                     ),
-              SizedBox(
-                height: 30,
-              ),
+              SizedBox(height: 30),
               Container(
                 height: 60,
                 width: MediaQuery.of(context).size.width,
@@ -218,21 +223,22 @@ class _signupState extends State<signup> {
                   ),
                 ),
                 child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      if (Username.text != '' &&
-                          Password.text != '' &&
-                          isMatched) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const MainHome(),
-                          ),
-                        );
-                      } else {
-                        isEmptyUsername = Username.text.isEmpty;
-                        isEmptyPassword = Password.text.isEmpty;
-                      }
-                    });
+                  onPressed: () async {
+                    if (usernameController.text.isNotEmpty &&
+                        passwordController.text.isNotEmpty &&
+                        isMatched) {
+                      await saveAccount(usernameController.text, passwordController.text);
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const MainHome(),
+                        ),
+                      );
+                    } else {
+                      setState(() {
+                        isEmptyUsername = usernameController.text.isEmpty;
+                        isEmptyPassword = passwordController.text.isEmpty;
+                      });
+                    }
                   },
                   child: Text(
                     "Create an Account",
