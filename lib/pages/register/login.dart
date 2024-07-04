@@ -1,24 +1,33 @@
 import 'package:Trailblazer_Flutter/pages/home/main_home.dart';
-// import 'package:Trailblazer_Flutter/pages/home/main_home.dart';
 import 'package:Trailblazer_Flutter/pages/register/signup.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class login extends StatefulWidget {
-  const login({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
 
   @override
-  State<login> createState() => _loginState();
+  State<Login> createState() => _LoginState();
 }
 
-class _loginState extends State<login> {
-  final String password = 'password123';
-  final String username = 'trailblazer';
+class _LoginState extends State<Login> {
+  final String defaultPassword = 'password123';
+  final String defaultUsername = 'trailblazer';
 
-  TextEditingController Username = TextEditingController();
-  TextEditingController Password = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   bool isEmptyUsername = false;
   bool isEmptyPassword = false;
+  bool isInvalidCredentials = false;
+
+  Future<bool> checkAccount(String username, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedUsername = prefs.getString('username');
+    String? savedPassword = prefs.getString('password');
+    return (username == defaultUsername && password == defaultPassword) ||
+        (username == savedUsername && password == savedPassword);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +76,11 @@ class _loginState extends State<login> {
                   ),
                 ),
                 child: TextField(
-                  controller: Username,
+                  controller: usernameController,
                   onChanged: (value) {
                     setState(() {
                       isEmptyUsername = value.isEmpty;
+                      isInvalidCredentials = false;
                     });
                   },
                   style: const TextStyle(color: Colors.white),
@@ -80,8 +90,7 @@ class _loginState extends State<login> {
                     hintText: "Username",
                     icon: Padding(
                       padding: const EdgeInsets.only(left: 25, top: 7),
-                      child: Icon(Icons.person,
-                          color: Colors.white.withOpacity(0.8)),
+                      child: Icon(Icons.person, color: Colors.white.withOpacity(0.8)),
                     ),
                     hintStyle: const TextStyle(
                       color: Color.fromARGB(255, 150, 150, 150),
@@ -95,8 +104,7 @@ class _loginState extends State<login> {
                       padding: const EdgeInsets.only(left: 10, top: 5),
                       child: Text(
                         "Please Fill Username",
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 255, 127, 80)),
+                        style: TextStyle(color: Color.fromARGB(255, 255, 127, 80)),
                       ),
                     )
                   : SizedBox(),
@@ -115,10 +123,11 @@ class _loginState extends State<login> {
                   ),
                 ),
                 child: TextField(
-                  controller: Password,
+                  controller: passwordController,
                   onChanged: (value) {
                     setState(() {
                       isEmptyPassword = value.isEmpty;
+                      isInvalidCredentials = false;
                     });
                   },
                   obscureText: true,
@@ -129,8 +138,7 @@ class _loginState extends State<login> {
                     hintText: "Password",
                     icon: Padding(
                       padding: const EdgeInsets.only(left: 25, top: 7),
-                      child: Icon(Icons.lock,
-                          color: Colors.white.withOpacity(0.8)),
+                      child: Icon(Icons.lock, color: Colors.white.withOpacity(0.8)),
                     ),
                     hintStyle: const TextStyle(
                       color: Color.fromARGB(255, 150, 150, 150),
@@ -144,12 +152,20 @@ class _loginState extends State<login> {
                       padding: const EdgeInsets.only(left: 10, top: 5),
                       child: Text(
                         "Please Fill Password",
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 255, 127, 80)),
+                        style: TextStyle(color: Color.fromARGB(255, 255, 127, 80)),
                       ),
                     )
                   : SizedBox(),
               SizedBox(height: 30),
+              isInvalidCredentials
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 10, top: 5),
+                      child: Text(
+                        "Invalid Username or Password",
+                        style: TextStyle(color: Color.fromARGB(255, 255, 127, 80)),
+                      ),
+                    )
+                  : SizedBox(),
               Container(
                 height: 60,
                 width: MediaQuery.of(context).size.width,
@@ -165,18 +181,19 @@ class _loginState extends State<login> {
                   ),
                 ),
                 child: TextButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    bool isValid = await checkAccount(usernameController.text, passwordController.text);
                     setState(() {
-                      if (Username.text == username &&
-                          Password.text == password) {
+                      if (isValid) {
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => const MainHome(),
                           ),
                         );
                       } else {
-                        isEmptyUsername = Username.text.isEmpty;
-                        isEmptyPassword = Password.text.isEmpty;
+                        isEmptyUsername = usernameController.text.isEmpty;
+                        isEmptyPassword = passwordController.text.isEmpty;
+                        isInvalidCredentials = true;
                       }
                     });
                   },
@@ -197,7 +214,7 @@ class _loginState extends State<login> {
                   TextButton(
                       onPressed: () {
                         Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => signup()));
+                            MaterialPageRoute(builder: (context) => Signup()));
                       },
                       child: Text(
                         "SignUp",

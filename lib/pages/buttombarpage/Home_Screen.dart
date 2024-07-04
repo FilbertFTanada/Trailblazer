@@ -31,8 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  int indexPassing = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -255,9 +253,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             isSelected: coffeetype[index][1],
                             onTap: () {
                               coffeeTypeSelected(index);
-                              setState(() {
-                                indexPassing = index;
-                              });
                             },
                           );
                         },
@@ -272,17 +267,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           childAspectRatio: 0.6,
                           crossAxisSpacing: 20,
                         ),
-                        itemCount: Provider.of<CoffeeNewProvider>(context)
-                            .coffee[indexPassing]
-                            .detail
-                            .length,
+                        itemCount:
+                            Provider.of<CoffeeProvider>(context).Coffeet.length,
                         itemBuilder: (BuildContext context, int index) {
-                          CoffeeNewProvider coffeeProvider =
-                              Provider.of<CoffeeNewProvider>(context);
-                          coffeeType coffee =
-                              coffeeProvider.coffee[indexPassing];
-                          return coffeeTile(
-                              coffee_param: coffee, indexCoffee: index);
+                          CoffeeProvider coffeeProvider =
+                              Provider.of<CoffeeProvider>(context);
+                          Coffee coffee = coffeeProvider.Coffeet[index];
+                          return coffeeTile(coffee: coffee);
                         },
                       ),
                     )
