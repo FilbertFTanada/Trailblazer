@@ -5,7 +5,6 @@ import 'package:Trailblazer_Flutter/util/coffe_type.dart';
 import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/coffee_tiles.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
-// import 'package:tes_home_page/pages/buttombarpage/Profile_Screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

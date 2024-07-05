@@ -15,8 +15,10 @@ class coffeeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(bottom: 40),
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -27,7 +29,7 @@ class coffeeTile extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => detailItem(
+                  builder: (context) => DetailItem(
                         coffee: coffee_param,
                         index: indexCoffee,
                       )));

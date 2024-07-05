@@ -92,7 +92,7 @@ class Onboarding extends StatelessWidget {
                       ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => login()));
+                                builder: (context) => Login()));
                           },
                           child: Text("Get Started"),
                           style: ElevatedButton.styleFrom(

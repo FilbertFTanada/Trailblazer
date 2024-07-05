@@ -1,5 +1,3 @@
-// ignore_for_file: camel_case_types
-
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -9,16 +7,22 @@ import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
 import 'package:readmore/readmore.dart';
 
-class detailItem extends StatelessWidget {
+class DetailItem extends StatefulWidget {
   final coffeeType coffee;
   final int index;
 
-  const detailItem({Key? key, required this.coffee, required this.index})
+  DetailItem({Key? key, required this.coffee, required this.index})
       : super(key: key);
 
   @override
+  _DetailItemState createState() => _DetailItemState();
+}
+
+class _DetailItemState extends State<DetailItem> {
+  String selectedSize = 'M'; // Default size selection
+
+  @override
   Widget build(BuildContext context) {
-    String selectedSize = 'M'; // Default size selection
     bool isSoldOut = selectedSize == 'S' || selectedSize == 'L';
 
     return Scaffold(
@@ -41,17 +45,17 @@ class detailItem extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.network(
-                    coffee.detail[index].image,
-                    fit: BoxFit.fill,
+                    widget.coffee.detail[widget.index].image,
+                    fit: BoxFit.cover,
                     color: isSoldOut ? Colors.grey.withOpacity(0.8) : null,
-                    colorBlendMode: BlendMode.hue,
+                    colorBlendMode: isSoldOut ? BlendMode.saturation : null,
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Text(
-                  coffee.name,
+                  widget.coffee.name,
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
@@ -61,7 +65,7 @@ class detailItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Text(
-                  coffee.detail[index].nameDetail,
+                  widget.coffee.detail[widget.index].nameDetail,
                   style: TextStyle(
                       fontSize: 13, color: Colors.blueGrey, fontFamily: 'Sora'),
                 ),
@@ -74,7 +78,7 @@ class detailItem extends StatelessWidget {
                       fontFamily: "Sora")),
               SizedBox(height: 10),
               ReadMoreText(
-                coffee.detail[index].desc,
+                widget.coffee.detail[widget.index].desc,
                 trimLines: 3,
                 textAlign: TextAlign.justify,
                 trimMode: TrimMode.Line,
@@ -100,6 +104,7 @@ class detailItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: ['S', 'M', 'L'].map((size) {
                   bool isSelected = selectedSize == size;
+                  bool isSoldOutChip = size == 'S' || size == 'L';
                   return ChoiceChip(
                     label: Text(size),
                     labelPadding:
@@ -107,16 +112,20 @@ class detailItem extends StatelessWidget {
                     checkmarkColor: Colors.white,
                     selected: isSelected,
                     onSelected: (isSelected) {
-                      if (isSelected) {
+                      setState(() {
                         selectedSize = size;
-                      }
+                      });
                     },
                     backgroundColor: isSelected
                         ? Color.fromARGB(255, 198, 127, 74)
-                        : Colors.white,
+                        : isSoldOutChip
+                            ? Colors.grey.withOpacity(0.4)
+                            : Colors.white,
                     selectedColor: Color.fromARGB(255, 198, 127, 74),
                     labelStyle: TextStyle(
-                        color: isSelected ? Colors.white : Colors.black),
+                        color: isSelected || isSoldOutChip
+                            ? Colors.white
+                            : Colors.black),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                       side: BorderSide(
@@ -162,7 +171,7 @@ class detailItem extends StatelessWidget {
                               fontFamily: "Sora"),
                         )
                       : Text(
-                          "\$${_calculatePrice(selectedSize, coffee).toStringAsFixed(2)}",
+                          "\$${_calculatePrice(selectedSize, widget.coffee).toStringAsFixed(2)}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
@@ -179,7 +188,8 @@ class detailItem extends StatelessWidget {
                         CoffeeNewProvider coffeeProvider =
                             Provider.of<CoffeeNewProvider>(context,
                                 listen: false);
-                        coffeeProvider.addItemToSelected(coffee, index);
+                        coffeeProvider.addItemToSelected(
+                            widget.coffee, widget.index);
                       },
                 child: Text(
                   "Buy Now",
@@ -203,10 +213,9 @@ class detailItem extends StatelessWidget {
   }
 
   double _calculatePrice(String selectedSize, coffeeType coffee) {
-    // double basePrice = double.parse(coffee.detail[index].price.substring(2)); // Remove '$ ' prefix and parse to double
-    double basePrice = double.parse(coffee.detail[index].price
+    double basePrice = double.parse(widget.coffee.detail[widget.index].price
         .replaceAll(' ', '')
-        .substring(1)); // Remove '$' prefix and parse to double
+        .substring(1));
 
     switch (selectedSize) {
       case 'S':
