@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -7,22 +9,16 @@ import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
 import 'package:readmore/readmore.dart';
 
-class DetailItem extends StatefulWidget {
+class detailItem extends StatelessWidget {
   final coffeeType coffee;
   final int index;
 
-  const DetailItem({Key? key, required this.coffee, required this.index})
+  const detailItem({Key? key, required this.coffee, required this.index})
       : super(key: key);
 
   @override
-  _DetailItemState createState() => _DetailItemState();
-}
-
-class _DetailItemState extends State<DetailItem> {
-  String selectedSize = 'M'; // Default size selection
-
-  @override
   Widget build(BuildContext context) {
+    String selectedSize = 'M'; // Default size selection
     bool isSoldOut = selectedSize == 'S' || selectedSize == 'L';
 
     return Scaffold(
@@ -45,17 +41,17 @@ class _DetailItemState extends State<DetailItem> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.network(
-                    widget.coffee.detail[widget.index].image,
+                    coffee.detail[index].image,
                     fit: BoxFit.fill,
                     color: isSoldOut ? Colors.grey.withOpacity(0.8) : null,
-                    colorBlendMode: isSoldOut ? BlendMode.saturation : null,
+                    colorBlendMode: BlendMode.hue,
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Text(
-                  widget.coffee.name,
+                  coffee.name,
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
@@ -65,7 +61,7 @@ class _DetailItemState extends State<DetailItem> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Text(
-                  widget.coffee.detail[widget.index].nameDetail,
+                  coffee.detail[index].nameDetail,
                   style: TextStyle(
                       fontSize: 13, color: Colors.blueGrey, fontFamily: 'Sora'),
                 ),
@@ -78,7 +74,7 @@ class _DetailItemState extends State<DetailItem> {
                       fontFamily: "Sora")),
               SizedBox(height: 10),
               ReadMoreText(
-                widget.coffee.detail[widget.index].desc,
+                coffee.detail[index].desc,
                 trimLines: 3,
                 textAlign: TextAlign.justify,
                 trimMode: TrimMode.Line,
@@ -104,7 +100,6 @@ class _DetailItemState extends State<DetailItem> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: ['S', 'M', 'L'].map((size) {
                   bool isSelected = selectedSize == size;
-                  bool isSoldOutChip = size == 'S' || size == 'L';
                   return ChoiceChip(
                     label: Text(size),
                     labelPadding:
@@ -112,20 +107,16 @@ class _DetailItemState extends State<DetailItem> {
                     checkmarkColor: Colors.white,
                     selected: isSelected,
                     onSelected: (isSelected) {
-                      setState(() {
+                      if (isSelected) {
                         selectedSize = size;
-                      });
+                      }
                     },
                     backgroundColor: isSelected
                         ? Color.fromARGB(255, 198, 127, 74)
-                        : isSoldOutChip
-                            ? Colors.grey.withOpacity(0.4)
-                            : Colors.white,
+                        : Colors.white,
                     selectedColor: Color.fromARGB(255, 198, 127, 74),
                     labelStyle: TextStyle(
-                        color: isSelected || isSoldOutChip
-                            ? Colors.white
-                            : Colors.black),
+                        color: isSelected ? Colors.white : Colors.black),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                       side: BorderSide(
@@ -171,7 +162,7 @@ class _DetailItemState extends State<DetailItem> {
                               fontFamily: "Sora"),
                         )
                       : Text(
-                          "\${_calculatePrice().toStringAsFixed(2)}",
+                          "\$${_calculatePrice(selectedSize, coffee).toStringAsFixed(2)}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
@@ -188,8 +179,7 @@ class _DetailItemState extends State<DetailItem> {
                         CoffeeNewProvider coffeeProvider =
                             Provider.of<CoffeeNewProvider>(context,
                                 listen: false);
-                        coffeeProvider.addItemToSelected(
-                            widget.coffee, widget.index);
+                        coffeeProvider.addItemToSelected(coffee, index);
                       },
                 child: Text(
                   "Buy Now",
@@ -213,7 +203,8 @@ class _DetailItemState extends State<DetailItem> {
   }
 
   double _calculatePrice(String selectedSize, coffeeType coffee) {
-    double basePrice = double.parse(widget.coffee.detail[widget.index].price
+    // double basePrice = double.parse(coffee.detail[index].price.substring(2)); // Remove '$ ' prefix and parse to double
+    double basePrice = double.parse(coffee.detail[index].price
         .replaceAll(' ', '')
         .substring(1)); // Remove '$' prefix and parse to double
 

@@ -27,7 +27,7 @@ class coffeeTile extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailItem(
+                  builder: (context) => detailItem(
                         coffee: coffee_param,
                         index: indexCoffee,
                       )));
