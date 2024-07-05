@@ -5,7 +5,6 @@ import 'package:Trailblazer_Flutter/util/coffe_type.dart';
 import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/coffee_tiles.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
-// import 'package:tes_home_page/pages/buttombarpage/Profile_Screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -30,6 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
       coffeetype[index][1] = true;
     });
   }
+
+  int indexPassing = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -253,6 +254,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             isSelected: coffeetype[index][1],
                             onTap: () {
                               coffeeTypeSelected(index);
+                              setState(() {
+                                indexPassing = index;
+                              });
                             },
                           );
                         },
@@ -267,13 +271,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           childAspectRatio: 0.6,
                           crossAxisSpacing: 20,
                         ),
-                        itemCount:
-                            Provider.of<CoffeeProvider>(context).Coffeet.length,
+                        itemCount: Provider.of<CoffeeNewProvider>(context)
+                            .coffee[indexPassing]
+                            .detail
+                            .length,
                         itemBuilder: (BuildContext context, int index) {
-                          CoffeeProvider coffeeProvider =
-                              Provider.of<CoffeeProvider>(context);
-                          Coffee coffee = coffeeProvider.Coffeet[index];
-                          return coffeeTile(coffee: coffee);
+                          CoffeeNewProvider coffeeProvider =
+                              Provider.of<CoffeeNewProvider>(context);
+                          coffeeType coffee =
+                              coffeeProvider.coffee[indexPassing];
+                          return coffeeTile(
+                              coffee_param: coffee, indexCoffee: index);
                         },
                       ),
                     )
