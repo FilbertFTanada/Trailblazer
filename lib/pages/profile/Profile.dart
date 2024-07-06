@@ -51,8 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (imagePath != null) {
         _profileImageFile = File(imagePath);
       }
-      _isLoading =
-          false; // Setelah semua data dimuat, set loading state menjadi false
+      _isLoading = false; // Setelah semua data dimuat, set loading state menjadi false
     });
   }
 
@@ -136,14 +135,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   Divider(color: Colors.grey, thickness: 1.0),
                   _buildProfileInfo('Email: $_email', 'Edit', _editEmail),
                   Divider(color: Colors.grey, thickness: 1.0),
-                  _buildProfileInfo(
-                      'Nomor Telepon: $_phone', 'Edit', _editPhone),
+                  _buildProfileInfo('Nomor Telepon: $_phone', 'Edit', _editPhone),
                   Divider(color: Colors.grey, thickness: 1.0),
-                  _buildProfileInfo(
-                      'Tanggal Lahir: $_birthdate', 'Edit', _editBirthdate),
+                  _buildProfileInfo('Tanggal Lahir: $_birthdate', 'Edit', _editBirthdate),
                   Divider(color: Colors.grey, thickness: 1.0),
-                  _buildProfileInfo('Alamat: ${_truncateString(_address, 21)}',
-                      'Edit', _editAddress),
+                  _buildProfileInfo('Alamat: ${_truncateString(_address, 21)}', 'Edit', _editAddress),
                   Divider(color: Colors.grey, thickness: 1.0),
                 ],
               ),
@@ -170,8 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileInfo(
-      String info, String buttonText, VoidCallback onPressed) {
+  Widget _buildProfileInfo(String info, String buttonText, VoidCallback onPressed) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -238,10 +233,8 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  void _showEditDialog(
-      String title, String initialValue, ValueChanged<String> onChanged) {
-    TextEditingController controller =
-        TextEditingController(text: initialValue);
+  void _showEditDialog(String title, String initialValue, ValueChanged<String> onChanged) {
+    TextEditingController controller = TextEditingController(text: initialValue);
 
     showDialog(
       context: context,
@@ -295,8 +288,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
-        _birthdate =
-            "${picked.day} ${_getMonthName(picked.month)} ${picked.year}";
+        _birthdate = "${picked.day} ${_getMonthName(picked.month)} ${picked.year}";
       });
       _saveProfileInfo('birthdate', _birthdate);
     }
@@ -304,18 +296,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String _getMonthName(int month) {
     List<String> monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
     ];
     return monthNames[month - 1];
   }

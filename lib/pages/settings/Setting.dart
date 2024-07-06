@@ -35,21 +35,24 @@ class _SettingPageState extends State<SettingPage> {
     _loadProfileInfo();
   }
 
-  _loadProfileInfo() async {
+  Future<void> _loadProfileInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _name = prefs.getString('name') ?? 'John Doe';
-      _profileImageUrl = prefs.getString('profile_image') ??
-          "https://img.freepik.com/free-photo/side-view-unknown-man-posing_23-2149417555.jpg?size=626&ext=jpg&ga=GA1.1.1152997229.1709223401&semt=ais";
+      String? imageUrl = prefs.getString('profile_image');
+      if (imageUrl != null && File(imageUrl).existsSync()) {
+        _profileImageUrl = imageUrl;
+      } else {
+        _profileImageUrl = "https://img.freepik.com/free-photo/side-view-unknown-man-posing_23-2149417555.jpg?size=626&ext=jpg&ga=GA1.1.1152997229.1709223401&semt=ais";
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final notif = Provider.of<NotificationProvider>(context, listen: false);
-    final paymentProvider =
-        Provider.of<PaymentProvider>(context, listen: false);
-    final langProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final paymentProvider = Provider.of<PaymentProvider>(context);
+    final langProvider = Provider.of<LanguageProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -61,10 +64,13 @@ class _SettingPageState extends State<SettingPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InkWell(
-              onTap: () {
-                Navigator.of(context).push(
+              onTap: () async {
+                // Navigate to ProfilePage and wait for result
+                await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ProfilePage()),
                 );
+                // Reload profile info after returning from ProfilePage
+                await _loadProfileInfo();
               },
               child: Row(
                 children: [
@@ -76,7 +82,7 @@ class _SettingPageState extends State<SettingPage> {
                       border: Border.all(color: Colors.grey, width: 1),
                     ),
                     child: ClipOval(
-                      child: _profileImageUrl.isNotEmpty
+                      child: _profileImageUrl.isNotEmpty && File(_profileImageUrl).existsSync()
                           ? Image.file(
                               File(_profileImageUrl),
                               fit: BoxFit.cover,
@@ -84,9 +90,6 @@ class _SettingPageState extends State<SettingPage> {
                           : Image.network(
                               _profileImageUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Text('Error loading image');
-                              },
                             ),
                     ),
                   ),
@@ -164,7 +167,7 @@ class _SettingPageState extends State<SettingPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
               ),
-              child: Text("Logout", style: TextStyle(color: Colors.black)),
+              child: const Text("Logout", style: TextStyle(color: Colors.black)),
             ),
           ],
         ),

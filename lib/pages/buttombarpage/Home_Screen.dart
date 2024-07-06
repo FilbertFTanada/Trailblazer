@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Trailblazer_Flutter/pages/settings/Setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -5,6 +7,7 @@ import 'package:Trailblazer_Flutter/util/coffe_type.dart';
 import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/coffee_tiles.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,6 +23,33 @@ class _HomeScreenState extends State<HomeScreen> {
     ['Latte', false],
     ['Americano', false]
   ];
+
+  late String _profileImageUrl =
+      "https://img.freepik.com/free-photo/side-view-unknown-man-posing_23-2149417555.jpg?size=626&ext=jpg&ga=GA1.1.1152997229.1709223401&semt=ais";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileImage();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadProfileImage();
+  }
+
+  Future<void> _loadProfileImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      String? imageUrl = prefs.getString('profile_image');
+      if (imageUrl != null && File(imageUrl).existsSync()) {
+        _profileImageUrl = imageUrl;
+      } else {
+        _profileImageUrl = "https://img.freepik.com/free-photo/side-view-unknown-man-posing_23-2149417555.jpg?size=626&ext=jpg&ga=GA1.1.1152997229.1709223401&semt=ais";
+      }
+    });
+  }
 
   void coffeeTypeSelected(int index) {
     setState(() {
@@ -87,23 +117,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => SettingPage()));
-                              },
-                              child: Container(
-                                  width: 50,
-                                  height: 40,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: const Image(
-                                      image: NetworkImage(
-                                          "https://img.freepik.com/free-photo/side-view-unknown-man-posing_23-2149417555.jpg?size=626&ext=jpg&ga=GA1.1.1152997229.1709223401&semt=ais"),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )),
+                            onTap: () async {
+                              await Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => SettingPage()));
+                              await _loadProfileImage(); // Reload profile image after returning from SettingPage
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 40,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: _profileImageUrl.isNotEmpty && File(_profileImageUrl).existsSync()
+                                    ? Image.file(
+                                        File(_profileImageUrl),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.network(
+                                        _profileImageUrl,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
                             ),
                           ),
                         ],
