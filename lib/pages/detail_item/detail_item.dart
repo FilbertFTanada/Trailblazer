@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -21,6 +22,15 @@ class DetailItem extends StatefulWidget {
 class _DetailItemState extends State<DetailItem> {
   String selectedSize = 'M'; // Default size selection
 
+  bool _isFavorited = false;
+  bool _isButtonDisabled = false;
+  bool _noSpam = false;
+
+  void _toggleFavorite() {
+    setState(() {
+      _isFavorited = !_isFavorited;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     bool isSoldOut = selectedSize == 'S' || selectedSize == 'L';
@@ -54,12 +64,24 @@ class _DetailItemState extends State<DetailItem> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  widget.coffee.name,
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                      fontFamily: "Sora"),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.coffee.name,
+                      style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: "Sora"),
+                    ),
+                    IconButton(
+                      icon: (_isFavorited
+                          ? const Icon(Icons.favorite)
+                          : const Icon(Icons.favorite_border)),
+                      color: Colors.red,
+                      onPressed: _toggleFavorite,
+                    ),
+                  ],
                 ),
               ),
               Padding(
@@ -181,18 +203,18 @@ class _DetailItemState extends State<DetailItem> {
                         ),
                 ],
               ),
+// Updated "Add to cart" button
               TextButton(
                 onPressed: isSoldOut
                     ? null
                     : () {
                         CoffeeNewProvider coffeeProvider =
-                            Provider.of<CoffeeNewProvider>(context,
-                                listen: false);
-                        coffeeProvider.addItemToSelected(
-                            widget.coffee, widget.index);
+                            Provider.of<CoffeeNewProvider>(context, listen: false);
+                        coffeeProvider.addItemToSelected(widget.coffee, widget.index);
+                        _showDialog(context); // Call the dialog function here
                       },
                 child: Text(
-                  "Buy Now",
+                  "Add to cart",
                   style: TextStyle(color: Colors.white, fontFamily: "Sora"),
                 ),
                 style: TextButton.styleFrom(
@@ -201,8 +223,7 @@ class _DetailItemState extends State<DetailItem> {
                       : const Color.fromARGB(255, 198, 124, 78),
                   foregroundColor: Colors.white,
                   minimumSize: Size(220, 60),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 ),
               ),
             ],
@@ -211,6 +232,65 @@ class _DetailItemState extends State<DetailItem> {
       ),
     );
   }
+
+  void _showDialog(BuildContext context) {
+  if (!_noSpam) {
+    setState(() {
+      _noSpam = true;
+    });
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 1), () {
+          Navigator.of(context).pop(true);
+          setState(() {
+            _noSpam = false;
+          });
+        });
+        return AlertDialog(
+          backgroundColor:  Color.fromARGB(255, 198, 124, 78), // Background color of the dialog
+          title: Text(
+            "Added Successfully",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,), // Title text color
+          ),
+          content: Text(
+            "You have added ${widget.coffee.name} to your cart.",
+            style: TextStyle(color: Colors.white), // Content text color
+          ),
+        );
+      },
+    );
+  }
+}
+
+
+  // void _showDialog(BuildContext context) {
+    
+  //   if (!_noSpam) {
+  //     setState(() {
+  //       _noSpam = true;
+  //     });
+
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       Future.delayed(Duration(seconds: 1), () {
+  //         Navigator.of(context).pop(true);
+  //       });
+  //       return AlertDialog(
+  //         title: Text("Added Successfull"),
+  //         content: Text(
+  //             "You have added ${widget.coffee.name} to your cart."),
+  //         );
+          
+  //       Timer(Duration(seconds: 2),(){
+  //         setState(() {_noSpam = false;
+  //         });
+  //       });
+
+  //   }
+  // }
 
   double _calculatePrice(String selectedSize, coffeeType coffee) {
     double basePrice = double.parse(widget.coffee.detail[widget.index].price
