@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
+import 'package:Trailblazer_Flutter/util/paymentprov.dart';
 
 class ShopScreen extends StatefulWidget {
   const ShopScreen({super.key});
@@ -10,10 +11,70 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
+  void _showCheckoutDialog(BuildContext context, double total) {
+    List<SelectedCoffeeDetail> selectedItems =
+        Provider.of<CoffeeNewProvider>(context, listen: false).selectedItems;
+    PaymentProvider paymentProvider =
+        Provider.of<PaymentProvider>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Pembelian'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                ...selectedItems.map((item) {
+                  return ListTile(
+                    title: Text('${item.coffeeTypeName} - ${item.detail.nameDetail}'),
+                    subtitle: Text('${item.detail.qt} x \$${item.detail.price.replaceAll('\$', '')}'),
+                    trailing: Text('\$${(double.parse(item.detail.price.replaceAll('\$', '')) * item.detail.qt).toStringAsFixed(2)}'),
+                  );
+                }).toList(),
+                const Divider(),
+                ListTile(
+                  title: const Text('Total'),
+                  trailing: Text('\$${total.toStringAsFixed(2)}'),
+                ),
+                const Divider(),
+                ListTile(
+                  title: const Text('Metode Pembayaran'),
+                  trailing: Text(paymentProvider.Selected),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Batal'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Beli'),
+              onPressed: () {
+                Provider.of<CoffeeNewProvider>(context, listen: false).resetSelectedItems();
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        'Pembelian Anda menggunakan pembayaran ${paymentProvider.Selected} berhasil!'),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List<SelectedCoffeeDetail> selectedItems =
-        Provider.of<CoffeeNewProvider>(context, listen: false).selectedItems;
+        Provider.of<CoffeeNewProvider>(context).selectedItems;
 
     double total = selectedItems.fold(
       0,
@@ -24,32 +85,31 @@ class _ShopScreenState extends State<ShopScreen> {
 
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           foregroundColor: Colors.white,
-          title: Text(
+          title: const Text(
             'Checkout',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.black87,
         ),
-        body: Provider.of<CoffeeNewProvider>(context).selectedItems.length != 0
+        body: selectedItems.isNotEmpty
             ? Column(
                 children: [
-                  // Tampilkan detail item-item yang dipilih
                   Expanded(
                     child: ListView.builder(
                       itemCount: selectedItems.length,
                       itemBuilder: (context, index) {
                         SelectedCoffeeDetail coffee = selectedItems[index];
                         return Container(
-                          margin: EdgeInsets.only(bottom: 5),
-                          padding: EdgeInsets.only(top: 5),
+                          margin: const EdgeInsets.only(bottom: 5),
+                          padding: const EdgeInsets.only(top: 5),
                           height: 120,
                           color: Colors.grey.withOpacity(0.2),
                           child: Column(
                             children: [
                               ListTile(
                                 isThreeLine: true,
-                                // dense: true,
                                 leading: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
@@ -60,14 +120,14 @@ class _ShopScreenState extends State<ShopScreen> {
                                 ),
                                 title: Text(
                                   coffee.coffeeTypeName,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: "Sora"),
                                 ),
                                 subtitle: Text(
                                   coffee.detail.nameDetail,
-                                  style: TextStyle(fontFamily: "Sora"),
+                                  style: const TextStyle(fontFamily: "Sora"),
                                 ),
                                 trailing: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
@@ -75,7 +135,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   children: [
                                     Text(
                                       '\$${(double.parse(coffee.detail.price.replaceAll('\$', '')) * coffee.detail.qt).toStringAsFixed(2)}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 16,
                                           fontFamily: "Sora",
                                           color: Colors.black),
@@ -85,10 +145,10 @@ class _ShopScreenState extends State<ShopScreen> {
                               ),
                               Container(
                                 height: 30,
-                                margin: EdgeInsets.all(0),
+                                margin: const EdgeInsets.all(0),
                                 child: Row(
                                   children: [
-                                    SizedBox(width: 120),
+                                    const SizedBox(width: 120),
                                     IconButton(
                                       onPressed: () {
                                         CoffeeNewProvider coffeeProvider =
@@ -97,7 +157,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                 listen: false);
                                         coffeeProvider.reduceItemQty(coffee);
                                       },
-                                      icon: Icon(Icons.remove),
+                                      icon: const Icon(Icons.remove),
                                       iconSize: 16,
                                       color: Colors.white,
                                       style: IconButton.styleFrom(
@@ -108,7 +168,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     ),
                                     Text(
                                       '  ${coffee.detail.qt}  ',
-                                      style: TextStyle(fontSize: 15),
+                                      style: const TextStyle(fontSize: 15),
                                     ),
                                     IconButton(
                                       onPressed: () {
@@ -138,9 +198,9 @@ class _ShopScreenState extends State<ShopScreen> {
                                           }
                                         }
                                       },
-                                      icon: Icon(Icons.add),
+                                      icon: const Icon(Icons.add),
                                       iconSize: 16,
-                                      color: Color.fromARGB(255, 198, 127, 74),
+                                      color: const Color.fromARGB(255, 198, 127, 74),
                                       style: IconButton.styleFrom(
                                         backgroundColor: Colors.white,
                                       ),
@@ -154,7 +214,6 @@ class _ShopScreenState extends State<ShopScreen> {
                       },
                     ),
                   ),
-                  // Tampilkan total harga
                   Container(
                     decoration: BoxDecoration(
                         border: Border(
@@ -165,12 +224,12 @@ class _ShopScreenState extends State<ShopScreen> {
                       children: [
                         Row(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 15,
                             ),
                             Text(
                               'Total: \$${total.toStringAsFixed(2)}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontFamily: "Sora",
                                 fontWeight: FontWeight.bold,
@@ -179,8 +238,15 @@ class _ShopScreenState extends State<ShopScreen> {
                           ],
                         ),
                         TextButton(
-                          onPressed: () {},
-                          child: Text(
+                          onPressed: () {
+                            _showCheckoutDialog(context, total);
+                          },
+                          style: TextButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 198, 127, 74),
+                              shape: const RoundedRectangleBorder(),
+                              minimumSize: const Size(150, 50)),
+                          child: const Text(
                             "Checkout",
                             style: TextStyle(
                                 fontSize: 18,
@@ -188,11 +254,6 @@ class _ShopScreenState extends State<ShopScreen> {
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ),
-                          style: TextButton.styleFrom(
-                              backgroundColor:
-                                  Color.fromARGB(255, 198, 127, 74),
-                              shape: RoundedRectangleBorder(),
-                              minimumSize: Size(150, 50)),
                         )
                       ],
                     ),
@@ -202,11 +263,9 @@ class _ShopScreenState extends State<ShopScreen> {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+                children: const [
                   Center(
-                    child: Container(
-                      child: Text("Belum ada Pesanan"),
-                    ),
+                    child: Text("Belum ada Pesanan"),
                   ),
                 ],
               ));

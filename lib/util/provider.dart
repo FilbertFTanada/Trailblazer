@@ -240,6 +240,20 @@ class CoffeeNewProvider extends ChangeNotifier {
   List<SelectedCoffeeDetail> getSelectedItems() {
     return List.from(selectedItems); // Return a copy of the selected items list
   }
+
+    List<SelectedCoffeeDetail> selectedCoffee = [];
+
+  void selectCoffeeDetail(String coffeeTypeName, CoffeeDetail detail) {
+    SelectedCoffeeDetail selected = SelectedCoffeeDetail(
+        coffeeTypeName: coffeeTypeName, detail: detail);
+    selectedCoffee.add(selected);
+    notifyListeners();
+  }
+
+  void resetSelectedItems() {
+    selectedItems = [];
+    notifyListeners();}
+
 }
 
 class Coffee {

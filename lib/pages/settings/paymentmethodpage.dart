@@ -43,7 +43,7 @@ class PaymentMethodPage extends StatelessWidget {
               );
               if (confirm ?? false) {
                 paymentMethodProvider.choice(paymentMethod);
-                Navigator.of(context).popUntil((route) => route.isFirst); // Go back to the settings page
+                Navigator.of(context).pop(true); // Go back to the settings page
               }
             },
             child: Container(
