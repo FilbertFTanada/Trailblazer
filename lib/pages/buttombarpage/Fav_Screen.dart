@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:Trailblazer_Flutter/util/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -94,19 +96,29 @@ class FavScreen extends StatelessWidget {
                                           Provider.of<CoffeeNewProvider>(
                                               context,
                                               listen: false);
-                                      coffeeProvider.addItemToSelected(
-                                          coffeeType(
-                                              name: favorites[index]
-                                                  .coffeeTypeName,
-                                              detail: [
-                                                favorites[index].detail
-                                              ]),
-                                          index);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  'Item successfully added'),
-                                              duration: Duration(seconds: 2)));
+
+                                      // Find the correct index in the coffeeType's detail list
+                                      var coffeeType = coffeeProvider.coffee
+                                          .firstWhere((coffeeType) =>
+                                              coffeeType.name ==
+                                              favorites[index].coffeeTypeName);
+                                      var detailIndex = coffeeType.detail
+                                          .indexWhere((detail) =>
+                                              detail.nameDetail ==
+                                              favorites[index]
+                                                  .detail
+                                                  .nameDetail);
+
+                                      if (detailIndex != -1) {
+                                        coffeeProvider.addItemToSelected(
+                                            coffeeType, detailIndex);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Item successfully added'),
+                                                duration:
+                                                    Duration(seconds: 2)));
+                                      }
                                     },
                                     icon: Icon(Icons.add_shopping_cart),
                                     iconSize: 20,

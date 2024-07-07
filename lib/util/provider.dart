@@ -232,12 +232,12 @@ class CoffeeNewProvider extends ChangeNotifier {
         selectedItems.removeAt(existingItemIndex);
       }
 
-      notifyListeners(); 
+      notifyListeners();
     }
   }
 
   List<SelectedCoffeeDetail> getSelectedItems() {
-    return List.from(selectedItems); 
+    return List.from(selectedItems);
   }
 
   List<SelectedCoffeeDetail> selectedFavorite = [];
