@@ -37,11 +37,19 @@ class PaymentMethodPage extends StatelessWidget {
                           'Are you sure you want to use $paymentMethod as your payment method?'),
                       actions: [
                         TextButton(
-                          child: const Text('Cancel'),
+                          child: const Text('Cancel',
+                          style: TextStyle(
+                            color: Colors.brown
+                            ),
+                            ),
                           onPressed: () => Navigator.of(context).pop(false),
                         ),
                         TextButton(
-                          child: const Text('Confirm'),
+                          child: const Text('Confirm',
+                            style: TextStyle(
+                              color: Colors.brown
+                              ),
+                            ),
                           onPressed: () => Navigator.of(context).pop(true),
                         ),
                       ],

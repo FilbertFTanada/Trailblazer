@@ -51,13 +51,21 @@ class _ShopScreenState extends State<ShopScreen> {
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('Batal'),
+            child: const Text('Batal',
+              style: TextStyle(
+              color: Colors.orange
+              ),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           TextButton(
-            child: const Text('Beli'),
+            child: const Text('Beli',
+            style: TextStyle(
+              color: Colors.orange
+            ),
+            ),
             onPressed: () {
               Provider.of<CoffeeNewProvider>(context, listen: false)
                   .resetSelectedItems();
