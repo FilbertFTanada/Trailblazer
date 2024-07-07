@@ -16,7 +16,7 @@ class _MainHomeState extends State<MainHome> {
     const HomeScreen(),
     FavScreen(),
     const ShopScreen(),
-    const NotifScreen()
+    const MessageListScreen()
   ];
   int currentIndex = 0;
 

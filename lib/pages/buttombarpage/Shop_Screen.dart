@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:Trailblazer_Flutter/util/provider.dart';
 import 'package:Trailblazer_Flutter/util/paymentprov.dart';
+import 'package:Trailblazer_Flutter/util/provider.dart';
+import 'package:Trailblazer_Flutter/util/notifprov.dart';
 
 class ShopScreen extends StatefulWidget {
   const ShopScreen({super.key});
@@ -12,68 +13,81 @@ class ShopScreen extends StatefulWidget {
 
 class _ShopScreenState extends State<ShopScreen> {
   void _showCheckoutDialog(BuildContext context, double total) {
-    List<SelectedCoffeeDetail> selectedItems =
-        Provider.of<CoffeeNewProvider>(context, listen: false).selectedItems;
-    PaymentProvider paymentProvider =
-        Provider.of<PaymentProvider>(context, listen: false);
+  List<SelectedCoffeeDetail> selectedItems =
+      Provider.of<CoffeeNewProvider>(context, listen: false).selectedItems;
+  PaymentProvider paymentProvider =
+      Provider.of<PaymentProvider>(context, listen: false);
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Konfirmasi Pembelian'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                ...selectedItems.map((item) {
-                  return ListTile(
-                    title: Text(
-                        '${item.coffeeTypeName} - ${item.detail.nameDetail}'),
-                    subtitle: Text(
-                        '${item.detail.qt} x \$${item.detail.price.replaceAll('\$', '')}'),
-                    trailing: Text(
-                        '\$${(double.parse(item.detail.price.replaceAll('\$', '')) * item.detail.qt).toStringAsFixed(2)}'),
-                  );
-                }).toList(),
-                const Divider(),
-                ListTile(
-                  title: const Text('Total'),
-                  trailing: Text('\$${total.toStringAsFixed(2)}'),
-                ),
-                const Divider(),
-                ListTile(
-                  title: const Text('Metode Pembayaran'),
-                  trailing: Text(paymentProvider.Selected),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Batal'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Beli'),
-              onPressed: () {
-                Provider.of<CoffeeNewProvider>(context, listen: false)
-                    .resetSelectedItems();
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                        'Pembelian Anda menggunakan pembayaran ${paymentProvider.Selected} berhasil!'),
-                  ),
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Konfirmasi Pembelian'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              ...selectedItems.map((item) {
+                return ListTile(
+                  title: Text(
+                      '${item.coffeeTypeName} - ${item.detail.nameDetail}'),
+                  subtitle: Text(
+                      '${item.detail.qt} x \$${item.detail.price.replaceAll('\$', '')}'),
+                  trailing: Text(
+                      '\$${(double.parse(item.detail.price.replaceAll('\$', '')) * item.detail.qt).toStringAsFixed(2)}'),
                 );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+              }).toList(),
+              const Divider(),
+              ListTile(
+                title: const Text('Total'),
+                trailing: Text('\$${total.toStringAsFixed(2)}'),
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text('Metode Pembayaran'),
+                trailing: Text(paymentProvider.Selected),
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Batal'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Beli'),
+            onPressed: () {
+              Provider.of<CoffeeNewProvider>(context, listen: false)
+                  .resetSelectedItems();
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                      'Pembelian Anda menggunakan pembayaran ${paymentProvider.Selected} berhasil!'),
+                ),
+              );
+              // Add notification logic
+              Provider.of<PurchaseMessageProvider>(context, listen: false)
+                  .addMessage(
+                PurchaseMessage(
+                  id: 'unique_id_here', // Ensure this argument is provided
+                  title: 'Pembelian Berhasil',
+                  body:'Pembelian Anda menggunakan ${paymentProvider.Selected} berhasil!',
+                  date: DateTime.now(),
+                  items: selectedItems, // Pass selected items
+                  total: total, // Pass total amount
+                  paymentMethod: paymentProvider.Selected, // Pass payment method
+                ),
+              );
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {

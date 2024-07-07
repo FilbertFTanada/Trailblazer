@@ -3,6 +3,7 @@ import 'package:Trailblazer_Flutter/pages/onboarding/onboarding.dart';
 import 'package:Trailblazer_Flutter/util/languageprov.dart';
 import 'package:Trailblazer_Flutter/util/paymentprov.dart';
 import 'package:Trailblazer_Flutter/util/settingnotifprov.dart';
+import 'package:Trailblazer_Flutter/util/notifprov.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Trailblazer_Flutter/util/provider.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (context) => PaymentProvider()),
+        ChangeNotifierProvider(create: (_) => PurchaseMessageProvider())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
