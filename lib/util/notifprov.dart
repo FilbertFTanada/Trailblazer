@@ -8,9 +8,9 @@ class PurchaseMessage {
   final String title;
   final String body;
   final DateTime date;
-  final List<SelectedCoffeeDetail> items; // Added field
-  final double total; // Added field
-  final String paymentMethod; // Added field
+  final List<SelectedCoffeeDetail> items; 
+  final double total; 
+  final String paymentMethod; 
 
   PurchaseMessage({
     required this.id,

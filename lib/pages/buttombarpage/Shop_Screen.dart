@@ -53,7 +53,7 @@ class _ShopScreenState extends State<ShopScreen> {
           TextButton(
             child: const Text('Batal',
               style: TextStyle(
-              color: Colors.orange
+              color: Colors.brown,
               ),
             ),
             onPressed: () {
@@ -63,7 +63,7 @@ class _ShopScreenState extends State<ShopScreen> {
           TextButton(
             child: const Text('Beli',
             style: TextStyle(
-              color: Colors.orange
+              color: Colors.brown
             ),
             ),
             onPressed: () {
@@ -76,17 +76,16 @@ class _ShopScreenState extends State<ShopScreen> {
                       'Pembelian Anda menggunakan pembayaran ${paymentProvider.Selected} berhasil!'),
                 ),
               );
-              // Add notification logic
               Provider.of<PurchaseMessageProvider>(context, listen: false)
                   .addMessage(
                 PurchaseMessage(
-                  id: 'unique_id_here', // Ensure this argument is provided
+                  id: 'unique_id_here', 
                   title: 'Pembelian Berhasil',
                   body:'Pembelian Anda menggunakan ${paymentProvider.Selected} berhasil!',
                   date: DateTime.now(),
-                  items: selectedItems, // Pass selected items
-                  total: total, // Pass total amount
-                  paymentMethod: paymentProvider.Selected, // Pass payment method
+                  items: selectedItems, 
+                  total: total, 
+                  paymentMethod: paymentProvider.Selected, 
                 ),
               );
             },

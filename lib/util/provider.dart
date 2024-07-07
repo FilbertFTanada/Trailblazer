@@ -1,4 +1,3 @@
-// import 'package:Trailblazer_Flutter/util/coffe_type.dart';
 import 'package:flutter/material.dart';
 
 class CoffeeDetail {
@@ -227,20 +226,18 @@ class CoffeeNewProvider extends ChangeNotifier {
     );
 
     if (existingItemIndex != -1) {
-      // Reduce qty if item is found
       if (selectedItems[existingItemIndex].detail.qt > 1) {
         selectedItems[existingItemIndex].detail.qt--;
       } else {
-        // Remove item from the list if qty is 1
         selectedItems.removeAt(existingItemIndex);
       }
 
-      notifyListeners(); // Notify listeners after modifying the list
+      notifyListeners(); 
     }
   }
 
   List<SelectedCoffeeDetail> getSelectedItems() {
-    return List.from(selectedItems); // Return a copy of the selected items list
+    return List.from(selectedItems); 
   }
 
   List<SelectedCoffeeDetail> selectedFavorite = [];

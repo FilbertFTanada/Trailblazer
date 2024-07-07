@@ -33,7 +33,6 @@ class _coffeeTileState extends State<coffeeTile> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // image
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
@@ -59,7 +58,6 @@ class _coffeeTileState extends State<coffeeTile> {
               ),
             ),
           ),
-          // coffee name
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(left: 5, top: 5),

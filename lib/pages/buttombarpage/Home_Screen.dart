@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           image: const DecorationImage(
                             image: AssetImage(
-                                "assets/kopi.png"), // replace with your image path
+                                "assets/kopi.png"), 
                             fit: BoxFit.cover,
                           ),
                           boxShadow: [
@@ -249,7 +249,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              // white background section
               Container(
                 height: 370,
                 margin: EdgeInsets.symmetric(horizontal: 30),

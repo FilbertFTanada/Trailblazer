@@ -66,11 +66,9 @@ class _SettingPageState extends State<SettingPage> {
           children: [
             InkWell(
               onTap: () async {
-                // Navigate to ProfilePage and wait for result
                 await Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ProfilePage()),
                 );
-                // Reload profile info after returning from ProfilePage
                 await _loadProfileInfo();
               },
               child: Row(

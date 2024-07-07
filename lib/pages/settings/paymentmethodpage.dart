@@ -17,7 +17,7 @@ class PaymentMethodPage extends StatelessWidget {
         margin: EdgeInsets.only(top: 40),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Two columns
+            crossAxisCount: 2, 
             crossAxisSpacing: 0,
             mainAxisSpacing: 10,
           ),
@@ -73,7 +73,7 @@ class PaymentMethodPage extends StatelessWidget {
                     children: [
                       Image.network(
                         paymentMethodProvider.getImageUrl(
-                            paymentMethod), // Get image from provider
+                            paymentMethod), 
                         width: 100,
                         height: 100,
                       ),

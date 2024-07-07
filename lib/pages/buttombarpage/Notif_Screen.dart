@@ -94,7 +94,6 @@ class MessageDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            // Display items purchased
             for (var item in message.items)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +121,6 @@ class MessageDetailScreen extends StatelessWidget {
                 ],
               ),
             const Divider(),
-            // Total and payment method
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

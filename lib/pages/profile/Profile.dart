@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _profileImageFile = File(imagePath);
       }
       _isLoading =
-          false; // Setelah semua data dimuat, set loading state menjadi false
+          false;
     });
   }
 
@@ -86,7 +86,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Tambahkan kondisi loading
     if (_isLoading) {
       return Scaffold(
         appBar: AppBar(
@@ -99,7 +98,6 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     }
 
-    // Setelah selesai loading, tampilkan halaman profil
     return Scaffold(
       appBar: AppBar(
         title: Text('My Profile'),
